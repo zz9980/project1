@@ -1,2 +1,222 @@
 # project1
 Project #1
+
+
+<HTML>
+<BODY BGCOLOR=#DDEEFF>
+
+<CENTER>
+	<FONT SIZE=6 >
+	PROJECT #1
+	</FONT>
+	<BIG><I>
+<BR>
+The big, bad monster
+<XBR>
+chases the brave, little hero,
+<BR>
+who chases after the gold,
+<XBR>
+while the sun moves across the sky.
+</I></BIG>
+</CENTER>
+
+<P>
+Design two animated creatures (a hero and a monster) 
+that are drawn with
+at least three different fill colors,
+using drawing methods
+such as rect, ellipse,line, etc. 
+The monster chases the hero,
+who chases after the gold.
+As they move about, 
+the arms or legs of
+the animated creatures 
+assume different positions
+<I>(to simulate walking, crawling, etc.)
+</I>
+
+
+
+<P> <B><U>NOTE:</U>  The hero does NOT follow the mouse.</B>
+<BR>
+Hero chases gold at a certain rate; monster chases hero at a slower rate.
+
+<HR>
+
+
+Declare global variables for the position coordinates (X,Y) of each object.
+Variable names should start with a small letter (NOT a Capital) for the first word, 
+but you may Capitalize any additional words.
+If the names are "Igor" and "Vladimir"
+then global declarations might look something like this:
+<PRE>
+	//// GLOBALS ////
+	float goldX, goldY;
+	float igorX, igorY;
+	float vladX, vladY; </PRE>
+and the Java code to move the monster
+might look something like this: <PRE>
+	// Monster chases hero //
+	igorX=  igorX + (vladX-igorX) / 150;	// Slowly chase hero
+	igorY +=  (vladY-igorY) / 150;
+	if (igorY < horizon-20) { igorY = horizon-40);
+	// Monster catches hero!
+	if ( dist( vladX,vladY, igorX,igorY ) < 50 )  {
+	  scor -= 100;
+	  reset();				// Move to side.
+	} </PRE>
+<FONT COLOR=RED>
+<B>NOTE: </B> Please don't call them Igor and Vlad!  Make up your own names!
+</FONT>
+
+<HR>
+
+<P>
+In the setup() method,
+reset everything to starting positions:
+<UL>
+<LI> Monster on one side of the screen, at a random height
+<LI> Hero is transported to <B><U>safety</U></B> within the house <I>(above horizon)</I>.
+<LI> Gold at a random position near the center of the screen.
+<LI> // <I>Since this reset is used elsewhere, you should make it a separate method.</I>
+</UL><PRE>
+	//// SETUP:  window size, etc. ////
+	void setup() {
+		size( ..., ... );
+		reset();
+	}</PRE>
+
+<P>
+Your code for the draw() method should not actually <B><U>draw</U></B> anything.
+<BR>
+Instead, have it call other methods to do all the work.
+<PRE>
+	//// NEXT FRAME:  scene, monster, hero, etc.
+	void draw() {
+		scene();
+		monster();
+		hero();
+		gold();
+		messages();
+	}
+
+	//// SCENE:  sky, sun, grass.
+	void scene() {
+		background( 200, 200, 255 );	// Light blue sky.
+
+			// ++++ ADD YOUR CODE HERE ++++ //
+	} </PRE>
+  
+Write your own Java code for each of these methods, and also for mousePressed() keyPressed() .
+
+<H3>SCENE & MESSAGES </H3>
+The scene is a grassy field with a row of trees,
+under a light blue sky with the sun moving slowly from left to right a few times per minute.
+Display title and score at the top; your name in the lower-left corner.
+Somewhere above the horizon is a score and a button.
+
+The scene should include the following:
+<UL>
+<LI> light-blue sky
+<LI> light-green grass covering the bottom 3/4 of the window
+<LI> a few trees on the horizon
+<LI> a house above the horizon (in front of trees)
+<LI> a sun that moves slowly across the sky (behind the trees)
+<P>
+<LI> somewhere above the horizon is a SCORE and a BUTTON
+<LI>
+Display a title, centered near the top of the window,
+and  display your name at the lower left.
+</UL>
+
+<H3>
+BUTTON & SCORING
+</H3>
+
+<P>
+When the button is clicked,
+deduct 50 points,
+move the gold to a random position,
+and
+reset everything to starting positions:
+hero in the house and monster 
+at a random height
+on one side of the window
+(randomly left or right),
+and the gold at a random position near the center.
+
+<UL>
+<LI> When hero gets gold, add 50 points and transport him into the house.
+<LI> If monster catches hero, he loses 100 points and transports to side of window.
+<LI> Monster cannot go above the horizon (cannot catch hero within house).
+<LI> Player may click button to create new gold at any time <I>(to escape monster!)</I>
+</UL>
+
+<HR>
+
+<P>
+For this project, use functions with arguments to draw parts of the creatures on the screen,
+and add some animation
+<I>
+(such as legs that "walk" or arms that "wave" or wings that "flap" or eyes that blink, etc.)
+</I>
+
+<BR>
+For example, code to draw the hero might look something like this:
+<PRE>
+	//// HERO:  Vlad is centered at (x,y) with body width w & height h //
+	void drawVlad( float x, float y, float w, float h ) {
+		// Body.
+		rectMode( CENTER );
+		fill( ... );
+		rect( x,y, w,h );
+		...					// etc.
+	  	text( "Vlad", x-w/3, y-h/4 );		// Name on shirt.
+		fill( ... );
+
+		// Head //
+		float headHeight= 20;
+		head( headHeight, x, y-h-headHeight/2 );
+
+		// Legs (starting at hips). //
+		fill( ... );
+		leg( 40, x-w/2, y+h/2 );		// legs start at hips.
+		leg( 40, x+w/2, y+h/2 );
+
+		// Arms //
+		float armLength=h/3;
+		arm( armLength,  x-w/2, y-h/2 );	// arms at shoulders
+		arm( -armLength,  x+w/2, y-h/2 );
+	}
+	//// EYE:  tall ellipse, two eyes.
+	void head( float h, float x, float y ) {
+		// Draw head and eyes //
+		ellipse( x, y, h, h*3/4 );
+		eye( x-h/6, y-h/4 );		// left eye
+		eye( x+h/6, y-h/4 );		// right eye
+	}
+	//// EYE:  blue circle inside white circle
+	void eye( float a, float b) {
+		. . .
+	}
+	. . .
+</PRE>
+
+
+
+<P>
+Use the same head(), eye(), leg(), and arm() functions
+for both the hero and the monster.
+
+<HR>
+<HR>
+
+
+
+
+<P>
+Be sure to begin with comment lines that state the purpose of your program
+(as well as your name),
+and begin each method (procedure, function, subprogram)
+with a comment line that states its purpose.
