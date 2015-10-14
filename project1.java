@@ -63,8 +63,8 @@ void scene() {
   triangle(180,horizon-100, 420,horizon-100, 300,horizon-180); //roof
   stroke(255);
   fill(255);
-  ellipse(horizon, horizon-160, 50,30);
-  ellipse(horizon-20, horizon-180, 60,35);
+  ellipse(200, 35, 50,30);
+  ellipse(180, 20, 60,35);
   noStroke();
   
   fill(188,110,80);
