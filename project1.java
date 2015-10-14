@@ -10,8 +10,9 @@ float hX, hY;                  //hero position
 float hDX, hDY;                //hero speed
 float horizon;
 float sunx=50, suny=50;        //sun
-float cloud1x = horizon, cloud1y = horizon-160; 
-float cloud2x = horizon-20, cloud2y = horizon-180, dxc=1.2;
+float moonx=50, moony=50;      //moon
+
+
 
 //// SETUP: window size ////
 void setup() {
@@ -26,7 +27,6 @@ void setup() {
 //// NEXT FRAM ////
 void draw() {
   scene();
-  cloudmove();
   //hero();
   //monster();
   //gold();
@@ -39,28 +39,34 @@ void scene() {
   stroke(0,240,0);
   rect(0,horizon,600,600);
   noStroke();
+ 
+   // SUN //
   
-  
-  // SUN //
   fill(255,255,0);
   ellipse(sunx,suny, 50,50);
-  sunx = sunx+.75 ;                                             //sun move
-  sunx %= width+(width/6); 
+  sunx = sunx+.125 ;                                             //sun move
+  sunx %= width+(width/1); 
   
-  if (sunx >= 620) {
-    fill(0,0,255);
-    rect(0, 0, 600, horizon);
-    
+  if (sunx >= width) {
+  fill(0,0,255);
+  rect(0, 0, 600, horizon);
+  fill(17,124,54);
+  rect(0, horizon, 600,600);
+  fill(255,255,0);
+  ellipse(moonx, moony, 50,50);
+  fill(0,0,255);
+  ellipse(moonx-20, moony, 60,60);
+  moonx = moonx + .125;
+  moonx %= width+(width/10);
   }
-  
   // HOUSE //
-  //ellipse(cloud1x, cloud1y, 50,30);                        //cloud
-  //ellipse(cloud2x, cloud2y, 60,35);                        //cloud
   stroke(162,167,165);
   fill(162,167,165);
   rect(200,horizon-100, 200,150);  
   rect(horizon, horizon-140, 30,80);  
   triangle(180,horizon-100, 420,horizon-100, 300,horizon-180); //roof
+  
+  // cloud //
   stroke(255);
   fill(255);
   ellipse(200, 35, 50,30);
@@ -73,19 +79,3 @@ void scene() {
   ellipse(290, horizon, 15,15);
   
 }
- 
- 
- void cloudmove(){
-     
-  cloud1x = cloud1x - .125*dxc;
-  cloud2x = cloud2x - .125*dxc;
-  cloud1y = cloud1y - .125*dxc;
-  cloud2y = cloud2y - .125*dxc;
-  
-  
- 
-  
-  
-}
-
-
