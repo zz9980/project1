@@ -1,17 +1,21 @@
 //////// Project 1: Monster chasing the hero, who chases after the gold ////
 //////// Teng Lin  (CST 112; 2015/10/14)
 
-
+String author=  "Teng Lin";
+String title=  " Monster Chasing HERO ";
+String help=  " Click RESET to reset everything to starting positions. (deduct 50 points) ";
+String quit= " Press q to quit";
 
 //// GLOBALS ////
 float goldx, goldy;
-float mx, my;         //monster
+float mx, my;                  //monster
 float hx, hy;                  //hero position
 float hdx, hdy;                //hero speed
 float horizon;
 float sunx=50, suny=50;        //sun
 float moonx=50, moony=50;      //moon
-
+float gx=200, gy=400;          //gold
+int score;
 
 
 //// SETUP: window size ////
@@ -20,17 +24,23 @@ void setup() {
   horizon = height/3;
   hx = width/2;
   hy = height/2;
+  mx=60;
+  my=300;
   hdx = 1;
   hdy = 1;
-  
+  reset();
+  reset1();
 }
+
 //// NEXT FRAM ////
 void draw() {
   scene();
+  button();
   hero();
-  //monster();
-  //gold();
-  
+  gold();
+  monster();
+  score();
+  messages();
 }
 
 void scene() {
@@ -59,6 +69,7 @@ void scene() {
   moonx = moonx + .125;
   moonx %= width+(width/10);
   }
+  
   // HOUSE //
   stroke(162,167,165);
   fill(162,167,165);
@@ -79,6 +90,43 @@ void scene() {
   
 }
 
+void button(){
+  fill(255,0,0);
+  rect(50,100, 80,40);
+  fill(0);
+  text("RESET", 70,125);
+
+}
+
+
+void mouseClicked() {
+ if ( mouseX >= 50 && mouseX <= 130 && mouseY >=100 && mouseY <=140 ) {
+  reset();
+  score -= 50;
+    }
+}
+
+void reset() {
+  
+  gx= random(200,400);
+  gy= random(300,550);
+  hx=300;
+  hy=150;
+  mx=50;
+  my=250;
+}
+
+void reset1() {
+  
+  gx= random(200,400);
+  gy= random(300,550);
+  hx=600;
+  hy=150;
+  mx=50;
+  my=250; 
+
+}
+
 void hero() {
   
   float lhipx=hx-30,lhipy=hy+105;                      //left leg
@@ -93,23 +141,32 @@ void hero() {
   rect( hx-5, hy+25, 10,10);
   rect(lhipx, lhipy, 10,35);
   rect(rhipx, rhipy, 10,35);
-  
-  //rect(lshoulderx, lshouldery, 10,45);
-  //rect(rshoulderx, rshouldery, 10,45);
   fill( 111,133,234);
   rect( hx-30, hy+35 , 60,70);                         //body
-  //rect( lshoex, lshoey, 20,10);
-  //rect( rshoex, rshoey, 20,10);
+  fill(0);
+  textSize(15);
+  text( "HERO", hx-15, hy+75);
+  /*rect(lshoulderx, lshouldery, 10,45);               //arm
+  rect(rshoulderx, rshouldery, 10,45);
+  rect( lshoex, lshoey, 20,10);                        //leg
+  rect( rshoex, rshoey, 20,10);
+  ellipse(hx-10, hy, 10, 10);                          //eye
+  ellipse(hx+10, hy, 10, 10);  
+  */
   
-  //moving arms and legs
+  //moving arms, legs, eyes, mouth//
   int k= frameCount/30%2;
   if (k==0) {
     fill(205,205,211);
-    rect(lshoulderx, lshouldery, 10,45);
-    rect(rshoulderx, rshouldery, 10,45);
+    rect(lshoulderx, lshouldery, 10,45);             //left arm
+    rect(rshoulderx, rshouldery, 10,45);             //right arm
     fill( 111,133,234);
-    rect( lshoex, lshoey, 20,10);
-    rect( rshoex, rshoey, 20,10);
+    rect( lshoex, lshoey, 20,10);                    //left shoe
+    rect( rshoex, rshoey, 20,10);                    //right shoe
+    fill(255);
+    ellipse(hx-10, hy, 10, 10);                      //left eye
+    ellipse(hx+10, hy, 10, 10);                      //right eye
+    rect( hx-10, hy+12, 20,2);                       //mouth
   }
   else {
     fill(205,205,211);
@@ -118,12 +175,17 @@ void hero() {
     fill( 111,133,234);
     rect( lshoex+10, lshoey, 20,10);
     rect( rshoex+10, rshoey, 20,10);
-      
+    fill(255);
+    ellipse(hx-10, hy, 12, 12);                 
+    ellipse(hx+10, hy, 12, 12);
+    rect( hx-10, hy+12, 20,8);                
   }
+  ////moving hero to chase after the gold////
   
   hx = hx + hdx;
   hy = hy + hdy;
-  
+  hx= hx + ( gx - (hx) ) / 60 ; 
+  hy= hy + ( gy - (hy) ) / 60 ;
   
   if ( hx > width-50 || hx < 50 ) {
     hdx *= -1;
@@ -135,5 +197,68 @@ void hero() {
     
   }
   
+}
+
+void gold( ) {
+  
+  fill(255,255,0);
+  rect( gx, gy, 10,20);
+  if ( dist( hx,hy, gx,gy ) < 70 ) {
+  gx= random(200,400);
+  gy= random(300,550);
+  }
+}
+
+
+
+
+void monster() {
+  
+  fill(111,84,31,30);                    //ghost
+  ellipse(mx, my, 80,60);                //head
+  ellipse(mx, my, 60,80);                //head
+  ellipse(mx-10, my , 10,10);            //left eye
+  ellipse(mx+10, my , 20, 20);           //right eye
+  rect( mx-10, my+20, 20,5);             //mouth
+  
+  // Monster chases hero //
+  mx +=  (hx-mx) / 120;
+  my +=  (hy-my) / 120;
+  
+  // Monster catches hero!
+  if ( dist( hx,hy, mx,my ) < 50 )  {
+      score -= 100;
+      reset();  
+   } 
+  
+  if ( dist( hx,hy, gx,gy ) < 75 )  {
+      score +=100;
+      reset1();
+  }
+  
+}
+
+void score() {
+  
+  fill(0);
+  textSize(10);
+  text("SCORE", 550, 20);
+  text(score, 550, 50);
+
+}
+
+void messages() {
+  
+  fill(0);
+  text( title, 250, 20 );
+  text( author, 550,height-15 );
+  text( help, 10, height-50 );
+  text( quit, 10, height-30 );
+}
+
+void keyPressed() {
+  if (key == 'q') {
+    exit();                           // press 'q' key to QUIT.
+  }
   
 }
